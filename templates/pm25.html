@@ -92,14 +92,14 @@
         const checkReload=document.querySelector("#check-reload");
         const reloadSecond=document.querySelector("#reload-sec");
         const delaySecond=30;
-        reloadSecond.value = delaySecond;
+        
         
 
         window.onload = function(){
-            // 讀取
             console.log("reload!");
-            checkReload.checked=localStorage.getItem("CheckReload") ? true : false;
-            reloadSecond.value = localStorage.getItem("ReloadSecond") ? localStorage.getItem("ReloadSecond")
+            // 讀取
+            checkReload.checked=sessionStorage.getItem("CheckReload") == "true";
+            reloadSecond.value = sessionStorage.getItem("ReloadSecond") ? sessionStorage.getItem("ReloadSecond")
                 : delaySecond;
 
             SetUpdateInterval();
@@ -107,20 +107,31 @@
 
         checkReload.addEventListener("change",() => {
             // 儲存
-
-            localStorage.setItem("CheckReload",checkReload.checked);
-            localStorage.setItem("ReloadSecond",reloadSecond.value);
+            console.log("chenged");
+            sessionStorage.setItem("CheckReload",checkReload.checked);
 
             SetUpdateInterval();
         });
 
+        reloadSecond.addEventListener("input", ()=> {
+            checkReload.checked = false;
+            sessionStorage.setItem("CheckReload",checkReload.checked);
+            sessionStorage.setItem("ReloadSecond",reloadSecond.value);
+            
+        })
+
+        let IntervalId=null;
         function SetUpdateInterval() {
             if (checkReload.checked) {
                 console.log("start reload!");
                 let sec =Number(reloadSecond.value) *1000;
-                setInterval((() => {
+                // 取得對應id
+                IntervalId=setInterval((() => {
                     window.location.reload();
                 }), sec);
+            }else{
+                // 清除Interval
+                clearInterval(IntervalId);
             }
         }
 
