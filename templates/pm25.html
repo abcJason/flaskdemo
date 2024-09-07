@@ -29,6 +29,25 @@
             }            
         }
 
+        .panell {
+            width: 200px;
+            margin: 3px auto;
+            background-color: orange;
+            padding: 6px;
+            border-radius: 3px;
+        }
+
+        .button-style {
+            background-color: aqua;
+            border: 0;
+            width: 50px;
+            border-radius: 3px;
+        }
+
+        form {
+            margin: 6px 0px;
+        }
+
     </style>
 </head>
 <body>
@@ -36,6 +55,13 @@
     <h3 style="color: rgb(14, 131, 34);">目前時間 {{data["today"]}}</h3>
     <a href="/">回首頁</a><br>
     <a href="">重新讀取</a>
+
+    <div class="panell">
+        <input type="checkbox" name="" id="check-reload">
+        開啟
+        <input name="" id="reload-sec" type="number">秒數
+    </div>
+
     <form action="" method="POST">
         <select name="sort" id="sort">
             <option value="true">升</option>
@@ -62,5 +88,47 @@
             {% endfor %}
         </tbody>
     </table>
+    <script>
+        const checkReload=document.querySelector("#check-reload");
+        const reloadSecond=document.querySelector("#reload-sec");
+        const delaySecond=30;
+        reloadSecond.value = delaySecond;
+        
+
+        window.onload = function(){
+            // 讀取
+            console.log("reload!");
+            checkReload.checked=localStorage.getItem("CheckReload") ? true : false;
+            reloadSecond.value = localStorage.getItem("ReloadSecond") ? localStorage.getItem("ReloadSecond")
+                : delaySecond;
+
+            SetUpdateInterval();
+        };
+
+        checkReload.addEventListener("change",() => {
+            // 儲存
+
+            localStorage.setItem("CheckReload",checkReload.checked);
+            localStorage.setItem("ReloadSecond",reloadSecond.value);
+
+            SetUpdateInterval();
+        });
+
+        function SetUpdateInterval() {
+            if (checkReload.checked) {
+                console.log("start reload!");
+                let sec =Number(reloadSecond.value) *1000;
+                setInterval((() => {
+                    window.location.reload();
+                }), sec);
+            }
+        }
+
+            
+      
+        
+
+       
+    </script>
 </body>
 </html>
